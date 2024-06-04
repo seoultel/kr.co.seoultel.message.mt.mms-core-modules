@@ -1,7 +1,7 @@
 package kr.co.seoultel.message.mt.mms.core_module.common.exceptions.fileServer;
 
 
-import kr.co.seoultel.message.mt.mms.core.constant.Constants;
+import kr.co.seoultel.message.mt.mms.core.common.constant.Constants;
 import kr.co.seoultel.message.mt.mms.core_module.dto.InboundMessage;
 
 import java.util.Collection;

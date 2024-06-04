@@ -1,7 +1,7 @@
 package kr.co.seoultel.message.mt.mms.core_module.modules.heartBeat.messages;
 
 import io.netty.buffer.ByteBuf;
-import kr.co.seoultel.message.mt.mms.core.interfaces.ConvertableToByteBuf;
+import kr.co.seoultel.message.mt.mms.core.common.interfaces.ConvertableToByteBuf;
 import kr.co.seoultel.message.mt.mms.core.messages.Message;
 import kr.co.seoultel.message.mt.mms.core.util.ConvertorUtil;
 import kr.co.seoultel.message.mt.mms.core_module.modules.heartBeat.HeartBeatProtocol;

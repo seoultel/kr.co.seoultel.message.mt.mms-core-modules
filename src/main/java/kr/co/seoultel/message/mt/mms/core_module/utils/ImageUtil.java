@@ -22,8 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static kr.co.seoultel.message.mt.mms.core.constant.Constants.JPEG_EXTENSION;
-import static kr.co.seoultel.message.mt.mms.core.constant.Constants.JPG_EXTENSION;
+import static kr.co.seoultel.message.mt.mms.core.common.constant.Constants.JPEG_EXTENSION;
+import static kr.co.seoultel.message.mt.mms.core.common.constant.Constants.JPG_EXTENSION;
 
 
 @Slf4j
