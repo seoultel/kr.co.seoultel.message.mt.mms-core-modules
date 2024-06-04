@@ -1,0 +1,132 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>kr.co.seoultel.message</groupId>
+  <artifactId>mms-core-modules</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>kr.co.seoultel.message.mt.mms.core.modules</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>standard</id>
+      <name>StandardNetworks Repository</name>
+      <url>http://ci.standard.kr:8282/nexus/content/repositories/standard/</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>kr.co.seoultel.message</groupId>
+      <artifactId>mms-core</artifactId>
+      <version>1.0.0</version>
+    </dependency>
+
+    <!-- Spring Web 모듈 추가 -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+      <version>5.3.31</version> <!-- 사용하는 Spring Framework 버전에 맞게 설정 -->
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>2.6.4</version> <!-- 사용하는 Spring Boot 버전에 맞게 설정 -->
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.30</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-amqp -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-amqp</artifactId>
+      <version>3.1.0</version>
+    </dependency>
+
+    <!--Gson-->
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>2.10.1</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/io.github.resilience4j/resilience4j-spring-boot2 -->
+    <dependency>
+      <groupId>io.github.resilience4j</groupId>
+      <artifactId>resilience4j-spring-boot2</artifactId>
+      <version>1.7.0</version>
+    </dependency>
+
+
+    <!--    <dependency>-->
+    <!--      <groupId>kr.co.seoultel.message</groupId>-->
+    <!--      <artifactId>message-core</artifactId>-->
+    <!--      <version>0.1.14rc</version>-->
+    <!--    </dependency>-->
+
+
+    <dependency>
+      <groupId>kr.co.seoultel.message</groupId>
+      <artifactId>message-core</artifactId>
+      <version>0.1.12</version>
+    </dependency>
+
+    <dependency>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+      <version>4.1.107.Final</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Spring Data Redis -->
+    <dependency>
+      <groupId>org.springframework.data</groupId>
+      <artifactId>spring-data-redis</artifactId>
+      <version>2.7.18</version> <!-- Spring Data Redis의 적절한 버전을 지정하세요 -->
+    </dependency>
+
+    <!--  IMAGE-REQUEST-BODY  -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.13.5</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/io.lettuce/lettuce-core -->
+    <dependency>
+      <groupId>io.lettuce</groupId>
+      <artifactId>lettuce-core</artifactId>
+      <version>6.1.0.RELEASE</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
