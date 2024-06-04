@@ -1,6 +1,6 @@
 package kr.co.seoultel.message.mt.mms.core_module.common.config;
 
-import kr.co.seoultel.message.mt.mms.core.interfaces.Checkable;
+import kr.co.seoultel.message.mt.mms.core.common.interfaces.Checkable;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
