@@ -13,6 +13,7 @@ public class FileServerException extends Exception {
 
     protected String mnoResult = Constants.UNKNOWN_FILE_SERVER_ERROR_MNO_RESULT;
     protected String reportMessage = Constants.UNKNOWN_FILE_SERVER_ERROR;
+    protected int deliveryType;
 
 
 

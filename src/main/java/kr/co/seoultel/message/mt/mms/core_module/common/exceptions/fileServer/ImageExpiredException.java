@@ -1,6 +1,8 @@
 package kr.co.seoultel.message.mt.mms.core_module.common.exceptions.fileServer;
 
+import kr.co.seoultel.message.core.dto.MessageDelivery;
 import kr.co.seoultel.message.mt.mms.core.common.constant.Constants;
+import kr.co.seoultel.message.mt.mms.core.util.FallbackUtil;
 import kr.co.seoultel.message.mt.mms.core_module.dto.InboundMessage;
 import lombok.Getter;
 
@@ -19,6 +21,7 @@ public class ImageExpiredException extends FileServerException {
         this.reportMessage = Constants.IMAGE_IS_EXPIRED;
         this.mnoResult = Constants.IMAGE_IS_EXPIRED_MNO_RESULT;
         this.expiredImageIds = expiredImageIds;
+        this.deliveryType = FallbackUtil.isFallback(messageDelivery) ? MessageDelivery.TYPE_FALLBACK_SUBMIT : MessageDelivery.TYPE_SUBMIT;
     }
 
     public ImageExpiredException(String umsMsgId, List<String> expiredImageIds) {
