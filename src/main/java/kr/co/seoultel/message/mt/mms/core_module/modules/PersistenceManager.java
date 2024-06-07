@@ -221,14 +221,14 @@ public class PersistenceManager {
         return false;
     }
 
-    public void findImagesInRedis(InboundMessage inboundMessage, String groupCode, Collection<String> undownloadedImageIdSet) throws ImageNotFoundException {
-        List<String> expiredImageIds = undownloadedImageIdSet.stream().filter((imageId) -> {
+    public void hasExpiredImages(InboundMessage inboundMessage, String groupCode, Collection<String> undownloadedImageIdSet) throws ImageNotFoundException {
+        List<String> expiredImages = undownloadedImageIdSet.stream().filter((imageId) -> {
                     String imageKey = RedisUtil.getRedisKeyOfImage(groupCode);
-                    return redisService.isExistsImage(imageKey, imageId);
+                    return !redisService.isExistsImage(imageKey, imageId);
                 })
                 .collect(Collectors.toList());
 
-        if (expiredImageIds.isEmpty()) throw new ImageNotFoundException(inboundMessage, expiredImageIds);
+        if (!expiredImages.isEmpty()) throw new ImageNotFoundException(inboundMessage, expiredImages);
     }
 
 
