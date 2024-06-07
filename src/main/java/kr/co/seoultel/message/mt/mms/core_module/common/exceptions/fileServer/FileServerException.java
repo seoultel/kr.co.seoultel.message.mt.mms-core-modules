@@ -2,6 +2,7 @@ package kr.co.seoultel.message.mt.mms.core_module.common.exceptions.fileServer;
 
 import kr.co.seoultel.message.core.dto.MessageDelivery;
 import kr.co.seoultel.message.mt.mms.core.common.constant.Constants;
+import kr.co.seoultel.message.mt.mms.core.entity.DeliveryType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +14,7 @@ public class FileServerException extends Exception {
 
     protected String mnoResult = Constants.UNKNOWN_FILE_SERVER_ERROR_MNO_RESULT;
     protected String reportMessage = Constants.UNKNOWN_FILE_SERVER_ERROR;
-    protected int deliveryType;
+    protected DeliveryType deliveryType;
 
 
 

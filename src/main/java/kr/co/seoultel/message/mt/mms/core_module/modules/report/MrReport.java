@@ -1,6 +1,7 @@
 package kr.co.seoultel.message.mt.mms.core_module.modules.report;
 
 import kr.co.seoultel.message.core.dto.MessageDelivery;
+import kr.co.seoultel.message.mt.mms.core.entity.DeliveryType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,15 +19,15 @@ import java.util.Objects;
 @Getter @Setter @ToString
 public class MrReport {
 
-    private DeliveryState state;
+    private DeliveryType type;
     private MessageDelivery messageDelivery;
 
-    public MrReport(DeliveryState rType) {
-        this.state = rType;
+    public MrReport(DeliveryType rType) {
+        this.type = rType;
     }
 
-    public MrReport(DeliveryState state, MessageDelivery messageDelivery) {
-        this.state = state;
+    public MrReport(DeliveryType type, MessageDelivery messageDelivery) {
+        this.type = type;
         this.messageDelivery = messageDelivery;
     }
 
@@ -35,11 +36,11 @@ public class MrReport {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MrReport that = (MrReport) o;
-        return state == that.state && Objects.equals(messageDelivery, that.messageDelivery);
+        return type == that.type && Objects.equals(messageDelivery, that.messageDelivery);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(state, messageDelivery);
+        return Objects.hash(type, messageDelivery);
     }
 }

@@ -2,20 +2,21 @@ package kr.co.seoultel.message.mt.mms.core_module.utils;
 
 import kr.co.seoultel.message.core.dto.MessageDelivery;
 import kr.co.seoultel.message.core.dto.ProcessRecord;
+import kr.co.seoultel.message.mt.mms.core.entity.DeliveryState;
+import kr.co.seoultel.message.mt.mms.core.entity.DeliveryType;
 import kr.co.seoultel.message.mt.mms.core.messages.Message;
 import kr.co.seoultel.message.mt.mms.core.util.FallbackUtil;
 import kr.co.seoultel.message.mt.mms.core_module.common.config.DefaultSenderConfig;
-import kr.co.seoultel.message.mt.mms.core_module.modules.report.DeliveryState;
 
 import java.util.Map;
 
 public abstract class MMSReportUtil<T extends Message> {
 
-    public void addProcessRecord(MessageDelivery message, DeliveryState deliveryState) {
+    protected void addProcessRecord(MessageDelivery message, DeliveryType deliveryType) {
         ProcessRecord processRecord = ProcessRecord.builder()
                 .processedTime(System.currentTimeMillis())
                 .processorName(DefaultSenderConfig.NAME)
-                .action(deliveryState + "(" + message.getUmsMsgId() + ")")
+                .action(deliveryType.getTypeEng() + "(" + message.getUmsMsgId() + ")")
                 .build();
 
         message.addProcessRecord(processRecord);
@@ -31,10 +32,13 @@ public abstract class MMSReportUtil<T extends Message> {
         messageDelivery.setDeliveryProcess(DefaultSenderConfig.NAME); // 해당 프로세스 고유의 ProcessName 할당
 
         /* SET DeliveryType(TYPE_FALLBACK_SUBMIT | TYPE_SUBMIT) */
-        int deliveryType = isFallback ? MessageDelivery.TYPE_FALLBACK_SUBMIT : MessageDelivery.TYPE_SUBMIT;
-        messageDelivery.setDeliveryType(deliveryType);
+        DeliveryState deliveryState = isFallback ? DeliveryState.FALLBACK_SUBMIT : DeliveryState.SUBMIT;
+        DeliveryType deliveryType = isFallback ? DeliveryType.FALLBACK_SUBMIT : DeliveryType.SUBMIT;
 
-        addProcessRecord(messageDelivery, DeliveryState.SUBMIT);
+        messageDelivery.setDeliveryState(deliveryState.getState());
+        messageDelivery.setDeliveryType(deliveryType.getType());
+
+        addProcessRecord(messageDelivery, deliveryType);
     }
 
 
@@ -44,7 +48,7 @@ public abstract class MMSReportUtil<T extends Message> {
      * @param message     the lghv message received from LGHV when submit-ack
      * @param messageDelivery the message delivery in redis or hash-map
      */
-    protected abstract void prepareToSubmitAckForReport(MessageDelivery messageDelivery, T message);
+    protected abstract void prepareToSubmitAck(MessageDelivery messageDelivery, T message);
 
     /**
      * Gets result of messageDelivery for send report to mcmp reporter when received submit-ack from LGHV
@@ -62,15 +66,20 @@ public abstract class MMSReportUtil<T extends Message> {
      * @param isSuccess     the is successed
      */
     public void setDeliveryTypeAndStateAtSubmitAck(MessageDelivery messageDelivery, boolean isSuccess) {
-        int deliveryState;
+        DeliveryState deliveryState;
+        DeliveryType deliveryType;
         if (FallbackUtil.isFallback(messageDelivery)) {
-            deliveryState = isSuccess ? MessageDelivery.STATE_FALLBACK_SUBMIT : MessageDelivery.STATE_FALLBACK_FAILED;
+            deliveryState = isSuccess ? DeliveryState.FALLBACK_SUBMIT : DeliveryState.FALLBACK_FAILED;
+            deliveryType = DeliveryType.FALLBACK_SUBMIT_ACK;
         } else {
-            deliveryState = isSuccess ? MessageDelivery.STATE_SUBMIT : MessageDelivery.STATE_FAILED;
+            deliveryState = isSuccess ? DeliveryState.SUBMIT : DeliveryState.FAILED;
+            deliveryType = DeliveryType.SUBMIT_ACK;
         }
 
-        messageDelivery.setDeliveryState(deliveryState);
-        messageDelivery.setDeliveryType(MessageDelivery.TYPE_SUBMIT_ACK);
+        messageDelivery.setDeliveryState(deliveryState.getState());
+        messageDelivery.setDeliveryType(deliveryType.getType());
+
+        addProcessRecord(messageDelivery, deliveryType);
     }
 
 
@@ -99,14 +108,19 @@ public abstract class MMSReportUtil<T extends Message> {
      * @param messageDelivery the message delivery
      */
     public void setDeliveryTypeAndStateAtReport(boolean isSuccess, MessageDelivery messageDelivery) {
-        int deliveryState;
+        DeliveryState deliveryState;
+        DeliveryType deliveryType;
         if (FallbackUtil.isFallback(messageDelivery)) {
-            deliveryState = isSuccess ? MessageDelivery.STATE_FALLBACK_SUCCESS : MessageDelivery.STATE_FALLBACK_FAILED;
+            deliveryState = isSuccess ? DeliveryState.FALLBACK_SUCCESS : DeliveryState.FALLBACK_FAILED;
+            deliveryType = DeliveryType.FALLBACK_REPORT;
         } else {
-            deliveryState = isSuccess ? MessageDelivery.STATE_SUCCESS : MessageDelivery.STATE_FAILED;
+            deliveryState = isSuccess ? DeliveryState.SUCCESS : DeliveryState.FAILED;
+            deliveryType = DeliveryType.REPORT;
         }
 
-        messageDelivery.setDeliveryState(deliveryState);
-        messageDelivery.setDeliveryType(MessageDelivery.TYPE_REPORT);
+        messageDelivery.setDeliveryState(deliveryState.getState());
+        messageDelivery.setDeliveryType(deliveryType.getType());
+
+        addProcessRecord(messageDelivery, deliveryType);
     }
 }
