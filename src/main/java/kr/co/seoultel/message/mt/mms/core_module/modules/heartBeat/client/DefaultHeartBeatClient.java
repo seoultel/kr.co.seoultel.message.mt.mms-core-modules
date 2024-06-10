@@ -24,10 +24,6 @@ public class DefaultHeartBeatClient extends TcpClient {
     /**************************************
      *              Variables             *
      **************************************/
-
-
-    // HeartBeat
-
     protected Channel channel;
 
     @Getter @Setter

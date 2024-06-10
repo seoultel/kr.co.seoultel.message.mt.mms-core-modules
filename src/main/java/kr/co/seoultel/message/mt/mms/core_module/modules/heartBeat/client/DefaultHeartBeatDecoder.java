@@ -39,47 +39,4 @@ public class DefaultHeartBeatDecoder extends ByteToMessageDecoder {
                 break;
         }
     }
-
-//    @Override
-//    protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf in, List<Object> out) {
-//        BeatMessage beat = new BeatMessage();
-//        switch (state()) {
-//            // header
-//            case READ_MSG_TYPE:
-//                ByteBuf msgTypeBuf = in.readBytes(HeartBeatProtocol.MSG_TYPE_SIZE);
-//                String msgType = msgTypeBuf.toString(Charset.forName("euc-kr"));
-//
-//                beat.setMsgType(msgType);
-//
-//                msgTypeBuf.release();
-//                checkpoint(HeartBeat.READ_MSG_LENGTH);
-//                break;
-//
-//            case READ_MSG_LENGTH:
-//                ByteBuf msgLengthBuf = in.readBytes(HeartBeatProtocol.MSG_LENGTH_SIZE);
-//                String msgLength = msgLengthBuf.toString(Charset.forName("euc-kr"));
-//
-//                beat.setMsgLength(msgLength);
-//
-//                msgLengthBuf.release();
-//                checkpoint(HeartBeat.READ_STATUS);
-//
-//                break;
-//
-//            // body
-//            case READ_STATUS:
-//                ByteBuf beatStatusBuf = in.readBytes(HeartBeatProtocol.STATUS_SIZE);
-//                String beatStatus = beatStatusBuf.toString(Charset.forName("euc-kr"));
-//
-//                beat.setBeatStatus(beatStatus);
-//                out.add(beat);
-//
-//                beatStatusBuf.release();
-//                checkpoint(HeartBeat.READ_MSG_TYPE);
-//                break;
-//
-//            default:
-//                throw new IllegalStateException("Unexpected value: " + state());
-//        }
-//    }
 }
