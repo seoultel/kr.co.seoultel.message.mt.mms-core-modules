@@ -215,7 +215,7 @@ public class PersistenceManager {
     public boolean isExpiredImage(String groupCode, String imageId) throws RedisException, QueryTimeoutException, RedisConnectionFailureException {
         if (RedisConnectionChecker.isConnected()) {
             String imageKey = RedisUtil.getRedisKeyOfImage(groupCode);
-            return !redisService.isExistsImage(imageKey, imageId); // hasImage -> not expried
+            return !redisService.isExpiredImage(imageKey, imageId); // hasImage -> not expried
         }
 
         return false;
@@ -224,7 +224,7 @@ public class PersistenceManager {
     public void hasExpiredImages(InboundMessage inboundMessage, String groupCode, Collection<String> imageIds) throws ImageNotFoundException {
         List<String> expiredImageIds = imageIds.stream().filter((imageId) -> {
                     String imageKey = RedisUtil.getRedisKeyOfImage(groupCode);
-                    return !redisService.isExistsImage(imageKey, imageId);
+                    return !redisService.isExpiredImage(imageKey, imageId);
                 })
                 .collect(Collectors.toList());
 

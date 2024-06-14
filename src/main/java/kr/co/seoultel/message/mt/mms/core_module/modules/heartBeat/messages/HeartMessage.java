@@ -25,7 +25,7 @@ public class HeartMessage extends HeartBeatMessage {
     }
 
     @Builder
-    public HeartMessage(String senderName, String senderGroup, String senderChannel, String queueName, String exchangeName, String heartStatus, String expireTime) {
+    public HeartMessage(String senderName, String senderGroup, String senderChannel, String queueName, String exchangeName, String heartStatus) {
         this.msgType = HeartBeatProtocol.HEART;
         this.msgLength = String.valueOf(HeartBeatProtocol.HEART_LENGTH);
 

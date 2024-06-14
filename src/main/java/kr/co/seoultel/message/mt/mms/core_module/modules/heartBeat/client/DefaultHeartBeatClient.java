@@ -122,14 +122,13 @@ public class DefaultHeartBeatClient extends TcpClient {
     protected HeartMessage getHeartInstance(String name, String group){
         String msgChannel = name.split("_")[1]; // S or M
         return HeartMessage.builder()
-
                 .senderName(name.toUpperCase())
                 .senderGroup(group.toUpperCase())
                 .senderChannel(msgChannel)
                 .queueName(mtQueueName)
                 .exchangeName(mtExchangeName)
                 .heartStatus(hStatus)
-                .expireTime(DateUtil.getDate(HeartBeatProtocol.DEFAULT_EXPIRE_TIME)).build();
+                .build();
     }
 
 

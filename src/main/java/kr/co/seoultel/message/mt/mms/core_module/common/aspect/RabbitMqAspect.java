@@ -4,10 +4,13 @@ import kr.co.seoultel.message.mt.mms.core.util.CommonUtil;
 import kr.co.seoultel.message.mt.mms.core_module.common.exceptions.rabbitMq.MsgReportException;
 import kr.co.seoultel.message.mt.mms.core_module.modules.report.MrReport;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Aspect;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @Slf4j
+@Aspect
 public class RabbitMqAspect {
     protected final ConcurrentLinkedQueue<MrReport> reportQueue;
 
@@ -23,6 +26,7 @@ public class RabbitMqAspect {
      * MessageDelivery instance in MsgFailException requeued
      *
      */
+    @AfterThrowing(pointcut = "execution(* kr.co.seoultel.message.mt.mms.core_module.modules.report.MrReportService.sendReport(..))", throwing = "ex")
     public void handleExceptionDuringSendReportToRabbit(MsgReportException ex) {
         CommonUtil.doThreadSleep(500L);
         reportQueue.add(ex.getMrReport());

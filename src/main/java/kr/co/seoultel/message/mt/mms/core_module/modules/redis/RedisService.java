@@ -107,9 +107,9 @@ public class RedisService {
 
 
     /* IMAGES */
-    public boolean isExistsImage(String key, String hashKey) throws RedisException, QueryTimeoutException, RedisConnectionFailureException {
+    public boolean isExpiredImage(String key, String hashKey) throws RedisException, QueryTimeoutException, RedisConnectionFailureException {
         try {
-            return Boolean.TRUE.equals(this.redisTemplate.opsForHash().hasKey(key, hashKey));
+            return this.redisTemplate.opsForHash().hasKey(key, hashKey);
         } catch (RedisConnectionFailureException | RedisCommandTimeoutException | QueryTimeoutException | RedisConnectionException var4) {
             log.error("[REDIS-CONNECTION-EXCEPTION] DIDN'T EXISTS IMAGE[{}] IN REDIS", key);
         } catch (Exception var5) {
@@ -119,9 +119,9 @@ public class RedisService {
         return false;
     }
 
-    public boolean isExpiredImage(String groupCode, String imageId) throws RedisException, QueryTimeoutException, RedisConnectionFailureException {
+    public boolean isExpiredImage2(String groupCode, String imageId) throws RedisException, QueryTimeoutException, RedisConnectionFailureException {
         if (RedisConnectionChecker.isConnected()) {
-            return !isExistsImage(groupCode, imageId); // hasImage -> not expried
+            return !isExpiredImage(groupCode, imageId); // hasImage -> not expried
         }
 
         return false;
