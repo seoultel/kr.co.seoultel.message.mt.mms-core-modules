@@ -65,7 +65,7 @@ public abstract class MMSReportUtil<T extends Message> {
      * @param messageDelivery the message delivery
      * @param isSuccess     the is successed
      */
-    public void setDeliveryTypeAndStateAtSubmitAck(MessageDelivery messageDelivery, boolean isSuccess) {
+    public void setDeliveryTypeAndStateAtSubmitAck(boolean isSuccess, MessageDelivery messageDelivery) {
         DeliveryState deliveryState;
         DeliveryType deliveryType;
         if (FallbackUtil.isFallback(messageDelivery)) {
