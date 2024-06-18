@@ -67,4 +67,12 @@ public class InboundMessage {
             log.error(e.getMessage(), e);
         }
     }
+
+    @Override
+    public String toString() {
+        return "InboundMessage{" +
+                "consumer=" + consumer +
+                ", messageDelivery=" + messageDelivery +
+                '}';
+    }
 }

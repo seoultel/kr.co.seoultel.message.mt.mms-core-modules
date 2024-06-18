@@ -21,6 +21,9 @@ public enum ChannelStatus {
     public boolean isBound() {
         return this == ChannelStatus.BOUND;
     }
+    public boolean isNotBound() {
+        return this != ChannelStatus.BOUND;
+    }
 
     public boolean isClosed() {
         return this == ChannelStatus.CLOSED;

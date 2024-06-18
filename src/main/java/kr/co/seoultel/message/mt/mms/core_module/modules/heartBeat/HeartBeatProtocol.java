@@ -9,10 +9,10 @@ public class HeartBeatProtocol {
     public static final int MSG_LENGTH_SIZE = 2;
 
     //Body size
-    public static final int SENDER_NAME_SIZE = 10;
+    public static final int SENDER_NAME_SIZE = 30;
     public static final int SENDER_CHANNEL_SIZE = 1;
     public static final int QUEUE_NAME_SIZE = 40;
-    public static final int SENDER_GROUP_SIZE = 10;
+    public static final int SENDER_GROUP_SIZE = 20;
     public static final int EXCHANGE_NAME_SIZE = 20;
     public static final int STATUS_SIZE = 1;
     public static final int EXPIRE_TIME_SIZE= 14;
@@ -27,7 +27,7 @@ public class HeartBeatProtocol {
 
     public static final int BEAT_LENGTH = 4;
 
-    public static final int HEART_LENGTH = 99;
+    public static final int HEART_LENGTH = 129;
 
     //Heart status code
     public static final String HEART_SUCCESS = "0";
