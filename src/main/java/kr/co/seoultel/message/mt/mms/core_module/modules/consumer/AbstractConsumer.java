@@ -7,10 +7,8 @@ import kr.co.seoultel.message.core.dto.MessageDelivery;
 import kr.co.seoultel.message.mt.mms.core.util.ConvertorUtil;
 import kr.co.seoultel.message.mt.mms.core_module.common.config.DefaultDataVaultConfig;
 import kr.co.seoultel.message.mt.mms.core.dataVault.DataVault;
-import kr.co.seoultel.message.mt.mms.core_module.dto.InboundMessage;
 import kr.co.seoultel.message.mt.mms.core_module.modules.report.MrReport;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -37,13 +35,10 @@ public abstract class AbstractConsumer implements Consumer {
     protected String mrQueueName;
 
 
-    protected long deliveryTag;
-    protected String consumerTag;
 
     protected Channel channel;
+    protected String consumerTag;
 
-    @Setter
-    protected InboundMessage inboundMessage;
 
     protected final ConcurrentLinkedQueue<MrReport> reportQueue;
 

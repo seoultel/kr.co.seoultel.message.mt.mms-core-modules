@@ -6,7 +6,7 @@ import java.util.Map;
 public class HeartBeatProtocol {
     //Header size
     public static final int MSG_TYPE_SIZE = 1;
-    public static final int MSG_LENGTH_SIZE = 2;
+    public static final int MSG_LENGTH_SIZE = 3;
 
     //Body size
     public static final int SENDER_NAME_SIZE = 30;
@@ -27,7 +27,7 @@ public class HeartBeatProtocol {
 
     public static final int BEAT_LENGTH = 4;
 
-    public static final int HEART_LENGTH = 129;
+    public static final int HEART_LENGTH = 130;
 
     //Heart status code
     public static final String HEART_SUCCESS = "0";

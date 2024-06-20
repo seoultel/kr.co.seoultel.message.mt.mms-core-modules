@@ -31,9 +31,9 @@ public abstract class MMSReportUtil<T extends Message> {
     public void prepareToSubmit(boolean isFallback, MessageDelivery messageDelivery) {
         messageDelivery.setDeliveryProcess(DefaultSenderConfig.NAME); // 해당 프로세스 고유의 ProcessName 할당
 
-        /* SET DeliveryType(TYPE_FALLBACK_SUBMIT | TYPE_SUBMIT) */
+        /* SET DeliveryType(TYPE_FALLBACK_SUBMIT_ACK | TYPE_SUBMIT) */
         DeliveryState deliveryState = isFallback ? DeliveryState.FALLBACK_SUBMIT : DeliveryState.SUBMIT;
-        DeliveryType deliveryType = isFallback ? DeliveryType.FALLBACK_SUBMIT : DeliveryType.SUBMIT;
+        DeliveryType deliveryType = isFallback ? DeliveryType.FALLBACK_SUBMIT_ACK : DeliveryType.SUBMIT_ACK;
 
         messageDelivery.setDeliveryState(deliveryState.getState());
         messageDelivery.setDeliveryType(deliveryType.getType());

@@ -14,19 +14,21 @@ import java.io.IOException;
 @Slf4j
 public class InboundMessage {
 
+    private final long deliveryTag;
     private final AbstractConsumer consumer;
 
     @Getter
     private final MessageDelivery messageDelivery;
 
-    public InboundMessage(MessageDelivery messageDelivery, AbstractConsumer consumer) {
+    public InboundMessage(long deliveryTag, MessageDelivery messageDelivery, AbstractConsumer consumer) {
+        this.deliveryTag = deliveryTag;
         this.messageDelivery = messageDelivery;
         this.consumer = consumer;
     }
 
     public void basicAck() throws NAckException {
         try {
-            consumer.getChannel().basicAck(consumer.getDeliveryTag(), false);
+            consumer.getChannel().basicAck(deliveryTag, false);
         } catch (AlreadyClosedException | IOException e) {
             log.error(e.getMessage(), e);
             throw new NAckException(this, e, NAckType.ACK);
@@ -37,7 +39,7 @@ public class InboundMessage {
 
     public void basicAck(Channel channel) throws NAckException {
         try {
-            channel.basicAck(consumer.getDeliveryTag(), false);
+            channel.basicAck(deliveryTag, false);
         } catch (AlreadyClosedException | IOException e) {
             log.error(e.getMessage(), e);
             throw new NAckException(this, e, NAckType.ACK);
@@ -48,7 +50,7 @@ public class InboundMessage {
 
     public void basicNack() throws NAckException {
         try {
-            consumer.getChannel().basicNack(consumer.getDeliveryTag(), false, true);
+            consumer.getChannel().basicNack(deliveryTag, false, true);
         } catch (AlreadyClosedException | IOException e) {
             log.error(e.getMessage(), e);
             throw new NAckException(this, e, NAckType.NACK);
@@ -59,7 +61,7 @@ public class InboundMessage {
 
     public void basicNack(Channel channel) throws NAckException {
         try {
-            channel.basicNack(consumer.getDeliveryTag(), false, true);
+            channel.basicNack(deliveryTag, false, true);
         } catch (AlreadyClosedException | IOException e) {
             log.error(e.getMessage(), e);
             throw new NAckException(this, e, NAckType.NACK);

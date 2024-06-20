@@ -23,4 +23,6 @@ public abstract class Client extends Thread {
     protected String name;
     @Value("${sender.group}")
     protected String group;
+    @Value("${sender.telecom}")
+    protected String telecom;
 }

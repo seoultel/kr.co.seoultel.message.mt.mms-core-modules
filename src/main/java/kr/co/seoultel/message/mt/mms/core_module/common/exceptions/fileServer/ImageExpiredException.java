@@ -22,7 +22,7 @@ public class ImageExpiredException extends FileServerException {
         this.reportMessage = Constants.IMAGE_IS_EXPIRED;
         this.mnoResult = Constants.IMAGE_IS_EXPIRED_MNO_RESULT;
         this.expiredImageIds = expiredImageIds;
-        this.deliveryType = FallbackUtil.isFallback(messageDelivery) ? DeliveryType.FALLBACK_SUBMIT : DeliveryType.SUBMIT;
+        this.deliveryType = FallbackUtil.isFallback(messageDelivery) ? DeliveryType.FALLBACK_SUBMIT_ACK : DeliveryType.SUBMIT_ACK;
     }
 
     public ImageExpiredException(String umsMsgId, List<String> expiredImageIds) {

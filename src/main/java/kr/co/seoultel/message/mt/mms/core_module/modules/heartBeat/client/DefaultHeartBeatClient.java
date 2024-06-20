@@ -6,9 +6,8 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
-import kr.co.seoultel.message.mt.mms.core.util.DateUtil;
 import kr.co.seoultel.message.mt.mms.core_module.modules.client.ChannelStatus;
-import kr.co.seoultel.message.mt.mms.core_module.modules.client.TcpClient;
+import kr.co.seoultel.message.mt.mms.core_module.modules.client.tcp.TcpClient;
 import kr.co.seoultel.message.mt.mms.core_module.common.config.DefaultHeartBeatConfig;
 import kr.co.seoultel.message.mt.mms.core_module.modules.heartBeat.HeartBeatProtocol;
 import kr.co.seoultel.message.mt.mms.core_module.modules.heartBeat.messages.HeartMessage;
@@ -85,9 +84,9 @@ public class DefaultHeartBeatClient extends TcpClient {
         HeartMessage heart = getHeartInstance(name, group);
         return channel.writeAndFlush(heart).addListener(future -> {
             if (future.isSuccess()) {
-                log.info("[HEART-BEAT] Successfully sent Message[{}] to HEART-BEAT", heart);
+                log.info("[HEART-BEAT] Successfully send Heart[{}] to HEART-BEAT", heart);
             } else {
-                log.error("[HEART-BEAT] Failed to send Message[{}] to HEART-BEAT", heart);
+                log.error("[HEART-BEAT] Failed to send Heart[{}] to HEART-BEAT", heart);
             }
         }).syncUninterruptibly().isSuccess();
     }
@@ -96,9 +95,9 @@ public class DefaultHeartBeatClient extends TcpClient {
         HeartMessage heart = getHeartInstance(name, group);
         return ctx.writeAndFlush(heart).addListener(future -> {
             if (future.isSuccess()) {
-                log.info("[HEART-BEAT] Successfully sent Message[{}] to HEART-BEAT", heart);
+                log.info("[HEART-BEAT] Successfully send Heart[{}] to HEART-BEAT", heart);
             } else {
-                log.error("[HEART-BEAT] Failed to send Message[{}] to HEART-BEAT", heart);
+                log.error("[HEART-BEAT] Failed to send Heart[{}] to HEART-BEAT", heart);
             }
         }).syncUninterruptibly().isSuccess();
     }

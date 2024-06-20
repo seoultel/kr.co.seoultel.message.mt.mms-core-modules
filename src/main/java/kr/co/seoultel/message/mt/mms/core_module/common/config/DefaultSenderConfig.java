@@ -21,17 +21,17 @@ public abstract class DefaultSenderConfig implements Checkable {
 
     @Value("${sender.name}")
     public void setName(String name) {
-        NAME = name;
+        NAME = name.toUpperCase();
     }
 
     @Value("${sender.group}")
     public void setGroup(String group) {
-        GROUP = group;
+        GROUP = group.toUpperCase();
     }
 
     @Value("${sender.telecom}")
     public void setTelecom(String telecom) {
-        TELECOM = telecom;
+        TELECOM = telecom.toUpperCase();
     }
 
     @Value("${sender.is-dummy}")

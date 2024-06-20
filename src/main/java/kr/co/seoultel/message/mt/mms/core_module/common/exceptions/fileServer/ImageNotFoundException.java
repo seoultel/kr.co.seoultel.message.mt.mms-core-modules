@@ -26,6 +26,6 @@ public class ImageNotFoundException extends FileServerException {
         this.messageDelivery = inboundMessage.getMessageDelivery();
         this.reportMessage = Constants.IMAGE_NOT_FOUND;
         this.mnoResult = Constants.IMAGE_NOT_FOUND_MNO_RESULT;
-        this.deliveryType = FallbackUtil.isFallback(messageDelivery) ? DeliveryType.FALLBACK_SUBMIT : DeliveryType.SUBMIT;
+        this.deliveryType = FallbackUtil.isFallback(messageDelivery) ? DeliveryType.FALLBACK_SUBMIT_ACK : DeliveryType.SUBMIT_ACK;
     }
 }

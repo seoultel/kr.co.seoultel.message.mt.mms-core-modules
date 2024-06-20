@@ -228,7 +228,7 @@ public class PersistenceManager {
                 })
                 .collect(Collectors.toList());
 
-        if (expiredImageIds.isEmpty()) throw new ImageNotFoundException(inboundMessage, expiredImageIds);
+        if (!expiredImageIds.isEmpty()) throw new ImageNotFoundException(inboundMessage, expiredImageIds);
     }
 
 

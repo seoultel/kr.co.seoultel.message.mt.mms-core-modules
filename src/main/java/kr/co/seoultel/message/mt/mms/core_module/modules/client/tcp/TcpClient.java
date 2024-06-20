@@ -1,5 +1,7 @@
-package kr.co.seoultel.message.mt.mms.core_module.modules.client;
+package kr.co.seoultel.message.mt.mms.core_module.modules.client.tcp;
 
+import kr.co.seoultel.message.mt.mms.core_module.modules.client.ChannelStatus;
+import kr.co.seoultel.message.mt.mms.core_module.modules.client.Client;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -40,4 +42,11 @@ public abstract class TcpClient extends Client {
 
     protected abstract void createSession() throws ConnectException;
     protected abstract void closeSession();
+
+    static class HttpClientProperty {
+        private String cpid;
+        private String bpid;
+        private String vasId;
+        private String vaspId;
+    }
 }
