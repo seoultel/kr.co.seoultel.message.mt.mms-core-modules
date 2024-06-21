@@ -6,6 +6,8 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.timeout.IdleStateHandler;
+import kr.co.seoultel.message.mt.mms.core_module.common.config.DefaultSenderConfig;
+import kr.co.seoultel.message.mt.mms.core_module.common.property.RabbitMqProperty;
 import kr.co.seoultel.message.mt.mms.core_module.modules.client.ChannelStatus;
 import kr.co.seoultel.message.mt.mms.core_module.modules.client.tcp.TcpClient;
 import kr.co.seoultel.message.mt.mms.core_module.common.config.DefaultHeartBeatConfig;
@@ -20,6 +22,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultHeartBeatClient extends TcpClient {
 
+    protected final RabbitMqProperty rabbitMqProperty;
+
+    public DefaultHeartBeatClient(RabbitMqProperty rabbitMqProperty) {
+        this.rabbitMqProperty = rabbitMqProperty;
+    }
+
     /**************************************
      *              Variables             *
      **************************************/
@@ -27,7 +35,6 @@ public class DefaultHeartBeatClient extends TcpClient {
 
     @Getter @Setter
     protected static String hStatus = HeartBeatProtocol.HEART_SUCCESS;
-
 
 
     protected final EventLoopGroup eventLoopGroup = new NioEventLoopGroup(1);
@@ -81,7 +88,7 @@ public class DefaultHeartBeatClient extends TcpClient {
 
 
     public boolean sendHeart(Channel channel) {
-        HeartMessage heart = getHeartInstance(name, group);
+        HeartMessage heart = getHeartInstance(DefaultSenderConfig.NAME, DefaultSenderConfig.GROUP, rabbitMqProperty);
         return channel.writeAndFlush(heart).addListener(future -> {
             if (future.isSuccess()) {
                 log.info("[HEART-BEAT] Successfully send Heart[{}] to HEART-BEAT", heart);
@@ -92,7 +99,7 @@ public class DefaultHeartBeatClient extends TcpClient {
     }
 
     public boolean sendHeart(ChannelHandlerContext ctx) {
-        HeartMessage heart = getHeartInstance(name, group);
+        HeartMessage heart = getHeartInstance(DefaultSenderConfig.NAME, DefaultSenderConfig.GROUP, rabbitMqProperty);
         return ctx.writeAndFlush(heart).addListener(future -> {
             if (future.isSuccess()) {
                 log.info("[HEART-BEAT] Successfully send Heart[{}] to HEART-BEAT", heart);
@@ -118,14 +125,14 @@ public class DefaultHeartBeatClient extends TcpClient {
     }
 
 
-    protected HeartMessage getHeartInstance(String name, String group){
+    protected HeartMessage getHeartInstance(String name, String group, RabbitMqProperty property){
         String msgChannel = name.split("_")[1]; // S or M
         return HeartMessage.builder()
                 .senderName(name.toUpperCase())
                 .senderGroup(group.toUpperCase())
                 .senderChannel(msgChannel)
-                .queueName(mtQueueName)
-                .exchangeName(mtExchangeName)
+                .queueName(property.getMtQueueName())
+                .exchangeName(property.getMtExchangeName())
                 .heartStatus(hStatus)
                 .build();
     }

@@ -1,35 +1,27 @@
 package kr.co.seoultel.message.mt.mms.core_module.modules.client.http;
 
-import kr.co.seoultel.message.core.dto.MessageDelivery;
+import kr.co.seoultel.message.mt.mms.core_module.common.exceptions.fileServer.FileServerException;
+import kr.co.seoultel.message.mt.mms.core_module.common.exceptions.rabbitMq.NAckException;
+import kr.co.seoultel.message.mt.mms.core_module.common.property.HttpClientProperty;
 import kr.co.seoultel.message.mt.mms.core_module.dto.InboundMessage;
-import lombok.Getter;
+import kr.co.seoultel.message.mt.mms.core_module.modules.PersistenceManager;
 import lombok.extern.slf4j.Slf4j;
+
+import java.io.IOException;
 
 @Slf4j
 public abstract class HttpClientHandler {
     protected final HttpClientProperty property;
+    protected final PersistenceManager persistenceManager;
 
-    public HttpClientHandler(String cpid, HttpClientProperty property) {
-        this.property = property.setCpid(cpid);
+    public HttpClientHandler(HttpClientProperty property, PersistenceManager persistenceManager) {
+        this.property = property;
+        this.persistenceManager = persistenceManager;
     }
 
-    protected abstract void doSubmit(InboundMessage inboundMessage);
+    protected abstract void doSubmit(InboundMessage inboundMessage) throws FileServerException, IOException, NAckException;
 
-    public String getMtExchangeName() {
-        return property.getMtExchangeName();
-    }
 
-    public String getMtQueueName() {
-        return property.getMtQueueName();
-    }
-
-    public String getMrExchangeName() {
-        return property.getMrExchangeName();
-    }
-
-    public String getMrQueueName() {
-        return property.getMrQueueName();
-    }
 
     public String getName() {
         return property.getName();

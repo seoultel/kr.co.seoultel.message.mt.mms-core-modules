@@ -4,25 +4,4 @@ import org.springframework.beans.factory.annotation.Value;
 
 public abstract class Client extends Thread {
 
-    /*
-     * USE RABBIT-MQ MT QUEUE
-     */
-    @Value("${mt.exchange}")
-    protected String mtExchangeName;
-
-    @Value("${mt.queue}")
-    protected String mtQueueName;
-
-    @Value("${mr.exchange}")
-    protected String mrExchangeName;
-    @Value("${mr.queue}")
-    protected String mrQueueName;
-
-
-    @Value("${sender.name}")
-    protected String name;
-    @Value("${sender.group}")
-    protected String group;
-    @Value("${sender.telecom}")
-    protected String telecom;
 }
