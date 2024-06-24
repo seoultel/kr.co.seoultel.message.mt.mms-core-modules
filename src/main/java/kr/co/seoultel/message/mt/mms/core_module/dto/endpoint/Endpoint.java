@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 @Slf4j
 @Getter @Setter
-public abstract class Endpoint {
+public class Endpoint {
 
     protected String ip;
     protected int port;
@@ -28,11 +28,11 @@ public abstract class Endpoint {
     }
 
     public String getHttpUrl() {
-        return String.join("http://", ip, String.valueOf(port), url);
+        return String.format("http://%s:%d", ip, port) + url;
     }
 
     public String getHttpsUrl() {
-        return String.join("https://", ip, String.valueOf(port), url);
+        return String.format("https://%s:%d", ip, port) + url;
     }
 
     @Override
@@ -41,5 +41,10 @@ public abstract class Endpoint {
                 "ip='" + ip + '\'' +
                 ", port=" + port +
                 '}';
+    }
+
+    public static void main(String[] args) {
+        Endpoint endpoint = new Endpoint("ip", 3030);
+        System.out.println(endpoint.getHttpsUrl());
     }
 }
