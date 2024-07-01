@@ -37,8 +37,8 @@ public abstract class MMSReportUtil<T extends Message> {
 
         messageDelivery.setDeliveryState(deliveryState.getState());
         messageDelivery.setDeliveryType(deliveryType.getType());
-
-        addProcessRecord(messageDelivery, deliveryType);
+        DeliveryType addProcessRecoredDeliveryType = isFallback ? DeliveryType.FALLBACK_SUBMIT : DeliveryType.SUBMIT;
+        addProcessRecord(messageDelivery, addProcessRecoredDeliveryType);
     }
 
 
