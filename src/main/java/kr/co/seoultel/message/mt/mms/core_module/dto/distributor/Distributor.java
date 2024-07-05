@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
-abstract class Distributor<T> {
+abstract class Distributor<T> implements Distributable<T>{
 
     @Getter
     protected AtomicInteger index = new AtomicInteger(0);
@@ -23,8 +23,10 @@ abstract class Distributor<T> {
         log.info("[Distributor] Successfully initiated distributor by data[{}]", list);
     }
 
-    protected abstract T get();
-    protected int reset() {
+    public abstract T get();
+
+    @Override
+    public int reset() {
         this.index.set(0);
         return index.get();
     }

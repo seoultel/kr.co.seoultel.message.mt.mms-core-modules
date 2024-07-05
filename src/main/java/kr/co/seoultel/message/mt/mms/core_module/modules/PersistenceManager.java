@@ -221,7 +221,7 @@ public class PersistenceManager {
         return false;
     }
 
-    public void hasExpiredImages(InboundMessage inboundMessage, String groupCode, Collection<String> imageIds) throws ImageNotFoundException {
+    public void hasExpiredImages(InboundMZessage inboundMessage, String groupCode, Collection<String> imageIds) throws ImageNotFoundException {
         List<String> expiredImageIds = imageIds.stream().filter((imageId) -> {
                     String imageKey = RedisUtil.getRedisKeyOfImage(groupCode);
                     return !redisService.isExpiredImage(imageKey, imageId);
