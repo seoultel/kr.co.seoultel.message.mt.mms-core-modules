@@ -1,10 +1,8 @@
-package kr.co.seoultel.message.mt.mms.core_module.dto.distributor;
+package kr.co.seoultel.message.mt.mms.core_module.distributor;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
 
 @Slf4j
 public class AutoIncreaseNumberDistributor implements Distributable<Integer> {

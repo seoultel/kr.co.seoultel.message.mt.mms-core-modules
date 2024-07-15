@@ -1,4 +1,4 @@
-package kr.co.seoultel.message.mt.mms.core_module.dto.distributor;
+package kr.co.seoultel.message.mt.mms.core_module.distributor;
 
 import lombok.extern.slf4j.Slf4j;
 
