@@ -3,24 +3,25 @@ package kr.co.seoultel.message.mt.mms.core_module.distributor;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
-abstract class Distributor<T> implements Distributable<T>{
+public abstract class Distributor<T> implements Distributable<T>{
 
     @Getter
     protected AtomicInteger index = new AtomicInteger(0);
 
     @Getter
     protected final int size;
-    protected final List<T> list;
+    protected final List<T> origin;
 
-    public Distributor(List<T> list) {
-        this.list = list;
-        this.size = list.size();
+    public Distributor(List<T> origin) {
+        this.origin = origin;
+        this.size = origin.size();
 
-        log.info("[Distributor] Successfully initiated distributor by data[{}]", list);
+        log.info("[Distributor] Successfully initiated distributor by data[{}]", origin);
     }
 
     public abstract T get();

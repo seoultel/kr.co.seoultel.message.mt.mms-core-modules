@@ -4,9 +4,11 @@ import kr.co.seoultel.message.mt.mms.core_module.common.config.DefaultFileServer
 import kr.co.seoultel.message.mt.mms.core_module.common.exceptions.fileServer.AttachedImageFormatException;
 import kr.co.seoultel.message.mt.mms.core_module.common.exceptions.fileServer.FileServerException;
 import kr.co.seoultel.message.mt.mms.core_module.common.exceptions.fileServer.ImageExpiredException;
+import kr.co.seoultel.message.mt.mms.core_module.common.exceptions.fileServer.ImageNotFoundException;
 import kr.co.seoultel.message.mt.mms.core_module.dto.InboundMessage;
 import kr.co.seoultel.message.mt.mms.core_module.modules.redis.RedisService;
 import kr.co.seoultel.message.mt.mms.core_module.utils.ImageUtil;
+import kr.co.seoultel.message.mt.mms.core_module.utils.RedisUtil;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -91,7 +93,7 @@ public class ImageService {
             String imageId = ImageUtil.getImageIdFromImageKey(imageKey);
 
             try {
-                if (redisService.isExpiredImage(groupCode, imageId)) {
+                if (redisService.hasKey(groupCode, imageId)) {
                     File expiredImage = new File(imagePath);
                     if (expiredImage.exists()) {
                         expiredImage.delete();
@@ -122,6 +124,16 @@ public class ImageService {
             String imageKey = ImageUtil.getImageKey(groupCode, imageId);
             images.remove(imageKey);
         });
+    }
+
+    public void hasExpiredImages(InboundMessage inboundMessage, String groupCode, Collection<String> imageIds) throws ImageNotFoundException {
+        List<String> expiredImageIds = (List) imageIds.stream().filter((imageId) -> {
+            String imageKey = RedisUtil.getRedisKeyOfImage(groupCode);
+            return !this.redisService.hasKey(imageKey, imageId);
+        }).collect(Collectors.toList());
+        if (!expiredImageIds.isEmpty()) {
+            throw new ImageNotFoundException(inboundMessage, expiredImageIds);
+        }
     }
 
     public static void checkAttachedImageCount(InboundMessage inboundMessage, List<String> imageIdList) throws AttachedImageFormatException {

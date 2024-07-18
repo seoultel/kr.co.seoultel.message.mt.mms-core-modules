@@ -1,129 +1,61 @@
 package kr.co.seoultel.message.mt.mms.core_module.modules.redis;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.ToNumberPolicy;
-import io.lettuce.core.RedisCommandTimeoutException;
-import io.lettuce.core.RedisConnectionException;
-import io.lettuce.core.RedisException;
-import kr.co.seoultel.message.core.dto.MessageDelivery;
 import kr.co.seoultel.message.mt.mms.core.util.ConvertorUtil;
-import kr.co.seoultel.message.mt.mms.core_module.utils.RedisUtil;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.QueryTimeoutException;
-import org.springframework.data.redis.RedisConnectionFailureException;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Component;
 
-import java.time.Duration;
 import java.util.Optional;
 
-
-
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class RedisService {
-    protected transient final Gson gson = new GsonBuilder().setObjectToNumberStrategy(ToNumberPolicy.LONG_OR_DOUBLE).create();
-
-
     protected final RedisTemplate<String, Object> redisTemplate;
 
-    public RedisService(RedisTemplate<String, Object> redisTemplate) {
-        this.redisTemplate = redisTemplate;
+
+    public void put(String key, Object object) {
+        String json = ConvertorUtil.convertObjectToJson(object);
+        redisTemplate.opsForValue().set(key, json);
+    }
+
+    public void put(String key, String hashKey, Object object) {
+        String json = ConvertorUtil.convertObjectToJson(object);
+        redisTemplate.opsForHash().put(key, hashKey, json);
     }
 
 
-    /*
-     * ================================================
-     *     *  SAVE :: Save Message To Redis *
-     * ================================================
-     */
-
-    /*
-     * MessageDelivery 를 final 로 선언하지 않았을 떄, java.util.ConcurrentModificationException 가 발생한다.
-     */
-    public void saveMessageByUmsMsgId(String umsMsgId, MessageDelivery messageDelivery) throws RedisException, QueryTimeoutException, RedisConnectionFailureException {
-        try {
-            String serializedMessage = this.gson.toJson(messageDelivery);
-            this.redisTemplate.opsForHash().putIfAbsent(RedisUtil.getRedisKeyOfMessage(), umsMsgId, serializedMessage);
-            log.info("[SUBMIT] MMS SENDER, GUARANTEE PERSISTENCE OF MESSAGE[umsMsgId : {}]", messageDelivery.getUmsMsgId());
-        } catch (RedisConnectionFailureException | RedisCommandTimeoutException | QueryTimeoutException | RedisConnectionException var4) {
-            log.error("[REDIS-CONNECTION-EXCEPTION] MESSAGE SAVED ONLY HASHMAP [{}]", umsMsgId);
-        } catch (Exception var5) {
-            log.error("[REDIS] Failed to save message[{}] in redis", messageDelivery, var5);
-        }
+    public String get(String key) {
+        return (String) redisTemplate.opsForValue().get(key);
     }
 
-    public void removeMessageByUmsMsgId(String umsMsgId) throws RedisException, QueryTimeoutException, RedisConnectionFailureException {
-        if (isExistsMessageByUmsMsgId(umsMsgId)) {
-            try {
-                this.redisTemplate.opsForHash().delete(RedisUtil.getRedisKeyOfMessage(), umsMsgId);
-                log.info("[MMS SENDER, GUARANTEE REMOVED] Message[umsMsgId : {}] REMOVED IN \"HASHMAP\" | \"REDIS\"", umsMsgId);
-            } catch (RedisConnectionFailureException | RedisCommandTimeoutException | QueryTimeoutException | RedisConnectionException var3) {
-                log.error("[REDIS-CONNECTION-EXCEPTION] MESSAGE DELETED ONLY HASHMAP [{}]", umsMsgId);
-            }
-        } else {
-            log.error("[REDIS] Failed to remove message[umsMsgId : {}] to redis", umsMsgId);
-        }
-
+    public String get(String key, String hashKey) {
+        return (String) redisTemplate.opsForHash().get(key, hashKey);
     }
 
-    public Optional<MessageDelivery> findMessageByUmsMsgIdToRedis(String umsMsgId) throws RedisException, QueryTimeoutException, RedisConnectionFailureException {
-        MessageDelivery messageDelivery = null;
-        if (this.isExistsMessageByUmsMsgId(umsMsgId)) {
-            try {
-                String json = (String)this.redisTemplate.opsForHash().get(RedisUtil.getRedisKeyOfMessage(), umsMsgId);
-                messageDelivery = (MessageDelivery) ConvertorUtil.convertJsonToObject(json, MessageDelivery.class);
-            } catch (Exception var4) {
-                log.info("[EXCEPTION] MESSAGE[umsMsgId: {}] FAIL TO FIND MESSAGE[{}] IN \"HASH-MAP\" & \"REDIS\"", umsMsgId, umsMsgId, var4);
-            }
-        }
 
-        return messageDelivery == null ? Optional.empty() : Optional.of(messageDelivery);
+    public Optional<String> getOptional(String key) {
+        return Optional.of(String.valueOf(redisTemplate.opsForValue().get(key)));
     }
 
-    public boolean updateMessageByUmsMsgIdToRedis(String umsMsgId, MessageDelivery messageDelivery, Duration duration) throws RedisException, QueryTimeoutException, RedisConnectionFailureException {
-        String serializedMessage = this.gson.toJson(messageDelivery);
-
-        try {
-            this.redisTemplate.opsForHash().put(RedisUtil.getRedisKeyOfMessage(), umsMsgId, serializedMessage);
-            return true;
-        } catch (Exception var6) {
-            log.info("[EXCEPTION] MESSAGE[umsMsgId: {}] FAIL TO UPDATE MESSAGE IN \"REDIS\"", umsMsgId, var6);
-            return false;
-        }
-    }
-
-    public boolean isExistsMessageByUmsMsgId(String umsMsgId) throws RedisException, QueryTimeoutException, RedisConnectionFailureException {
-        try {
-            return this.redisTemplate.opsForHash().hasKey(RedisUtil.getRedisKeyOfMessage(), umsMsgId);
-        } catch (RedisConnectionFailureException | RedisCommandTimeoutException | QueryTimeoutException | RedisConnectionException var3) {
-            log.error("[DISCONNECTED TO REDIS] DIDN'T KNOW MESSAGE[umsMsgId: {}] IN REDIS", umsMsgId);
-        } catch (Exception var4) {
-            log.info("[EXCEPTION] DIDN'T KNOW MESSAGE[umsMsgId: {}] IN REDIS", umsMsgId);
-        }
-
-        return false;
+    public Optional<String> getOptional(String key, String hashKey) {
+        return Optional.of(String.valueOf(redisTemplate.opsForHash().get(key, hashKey)));
     }
 
 
 
-    /* IMAGES */
-    public boolean isExpiredImage(String key, String hashKey) throws RedisException, QueryTimeoutException, RedisConnectionFailureException {
-        try {
-            return this.redisTemplate.opsForHash().hasKey(key, hashKey);
-        } catch (RedisConnectionFailureException | RedisCommandTimeoutException | QueryTimeoutException | RedisConnectionException var4) {
-            log.error("[REDIS-CONNECTION-EXCEPTION] DIDN'T EXISTS IMAGE[{}] IN REDIS", key);
-        } catch (Exception var5) {
-            log.error(var5.getMessage());
-        }
-
-        return false;
+    public Boolean delete(String key) {
+        return redisTemplate.delete(key);
     }
 
-    public boolean isExpiredImage2(String groupCode, String imageId) throws RedisException, QueryTimeoutException, RedisConnectionFailureException {
-        if (RedisConnectionChecker.isConnected()) {
-            return !isExpiredImage(groupCode, imageId); // hasImage -> not expried
-        }
-
-        return false;
+    public Long delete(String key, String hashKey) {
+        return redisTemplate.opsForHash().delete(key, hashKey);
     }
+
+
+    public Boolean hasKey(String key, String hashKey) {
+        return redisTemplate.opsForHash().hasKey(key, hashKey);
+    }
+
 }

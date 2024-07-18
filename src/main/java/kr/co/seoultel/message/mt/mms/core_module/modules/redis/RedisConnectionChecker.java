@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.util.Objects;
+
 @Slf4j
 public class RedisConnectionChecker {
 
@@ -27,7 +29,8 @@ public class RedisConnectionChecker {
 
     public void redisConnectionIsAlive() {
         try {
-            isConnected = Boolean.parseBoolean(redisConnectionFactory.getConnection().ping());
+            String ping = redisConnectionFactory.getConnection().ping();
+            isConnected = Objects.requireNonNullElse(ping, "").equalsIgnoreCase("PONG");
         } catch (Exception e) {
             isConnected = false;
         }

@@ -2,13 +2,18 @@ package kr.co.seoultel.message.mt.mms.core_module.utils;
 
 import kr.co.seoultel.message.core.dto.MessageDelivery;
 import kr.co.seoultel.message.core.dto.ProcessRecord;
+import kr.co.seoultel.message.core.dto.Result;
 import kr.co.seoultel.message.mt.mms.core.entity.DeliveryState;
 import kr.co.seoultel.message.mt.mms.core.entity.DeliveryType;
 import kr.co.seoultel.message.mt.mms.core.messages.Message;
 import kr.co.seoultel.message.mt.mms.core.util.FallbackUtil;
 import kr.co.seoultel.message.mt.mms.core_module.common.config.DefaultSenderConfig;
+import lombok.NonNull;
 
 import java.util.Map;
+
+import static kr.co.seoultel.message.mt.mms.core.common.constant.Constants.SYSTEM;
+
 
 public abstract class MMSReportUtil<T extends Message> {
 
@@ -40,6 +45,20 @@ public abstract class MMSReportUtil<T extends Message> {
         DeliveryType addProcessRecoredDeliveryType = isFallback ? DeliveryType.FALLBACK_SUBMIT : DeliveryType.SUBMIT;
         addProcessRecord(messageDelivery, addProcessRecoredDeliveryType);
     }
+
+    public static void handleSenderException(MessageDelivery messageDelivery, @NonNull String message, @NonNull String mnoResult, DeliveryType deliveryType){
+        Map<String, Object> resultMap = Result.builder()
+                .mnoCd(SYSTEM)                                 // SYSTEM
+                .message(message)                                                 // ~~
+                .mnoResult(mnoResult)                                             // FORMAT_ERROR
+                .settleCode(DefaultSenderConfig.NAME)                               // senderName
+                .build().toMap();
+
+        messageDelivery.setResult(resultMap);
+        messageDelivery.setDeliveryType(deliveryType.getType());
+        messageDelivery.setDeliveryState(MessageDelivery.STATE_FAILED);
+    }
+
 
 
     /**

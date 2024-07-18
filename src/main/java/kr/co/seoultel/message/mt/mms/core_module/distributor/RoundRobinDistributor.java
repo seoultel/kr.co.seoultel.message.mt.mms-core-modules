@@ -2,6 +2,7 @@ package kr.co.seoultel.message.mt.mms.core_module.distributor;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -12,22 +13,13 @@ public class RoundRobinDistributor<T> extends Distributor<T> {
         super(list);
     }
 
-    @Override
     public T get() {
-        while (true) {
-            int currentIndex = index.getAndIncrement();
-            if (currentIndex >= size) {
-                synchronized (this) {
-                    if (index.get() >= size) {
-                        reset();
-                        currentIndex = index.getAndIncrement();
-                    } else {
-                        currentIndex = index.getAndIncrement();
-                    }
-                }
-            }
-            return list.get(currentIndex % size);
-        }
+        int currentIndex = index.getAndUpdate(i -> (i + 1) % size);
+        return origin.get(currentIndex);
+    }
+
+    public Collection<T> getList() {
+        return origin;
     }
 
 

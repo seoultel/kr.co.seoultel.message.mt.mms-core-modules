@@ -26,4 +26,6 @@ public class RabbitMqProperty {
 
     @Value("${mr.queue}")
     protected String mrQueueName;
+
+
 }
