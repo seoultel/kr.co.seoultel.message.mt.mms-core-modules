@@ -6,12 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class RedisService {
+
     protected final RedisTemplate<String, Object> redisTemplate;
 
 
@@ -25,6 +27,20 @@ public class RedisService {
         redisTemplate.opsForHash().put(key, hashKey, json);
     }
 
+    public void putSafely(String key, Object object) {
+        if (RedisConnectionChecker.isConnected()) {
+            String json = ConvertorUtil.convertObjectToJson(object);
+            redisTemplate.opsForValue().set(key, json);
+        }
+    }
+
+    public void putSafely(String key, String hashKey, Object object) {
+        if (RedisConnectionChecker.isConnected()) {
+            String json = ConvertorUtil.convertObjectToJson(object);
+            redisTemplate.opsForHash().put(key, hashKey, json);
+        }
+    }
+
 
     public String get(String key) {
         return (String) redisTemplate.opsForValue().get(key);
@@ -35,14 +51,21 @@ public class RedisService {
     }
 
 
-    public Optional<String> getOptional(String key) {
-        return Optional.of(String.valueOf(redisTemplate.opsForValue().get(key)));
+    public Optional<String> getSafely(String key) {
+        if (RedisConnectionChecker.isConnected()) {
+            return Optional.ofNullable((String) redisTemplate.opsForValue().get(key));
+        }
+
+        return Optional.empty();
     }
 
-    public Optional<String> getOptional(String key, String hashKey) {
-        return Optional.of(String.valueOf(redisTemplate.opsForHash().get(key, hashKey)));
-    }
+    public Optional<String> getSafely(String key, String hashKey) {
+        if (RedisConnectionChecker.isConnected()) {
+            return Optional.ofNullable((String) redisTemplate.opsForHash().get(key, hashKey));
+        }
 
+        return Optional.empty();
+    }
 
 
     public Boolean delete(String key) {
@@ -54,8 +77,32 @@ public class RedisService {
     }
 
 
+    public Boolean deleteSafely(String key) {
+        if (RedisConnectionChecker.isConnected()) {
+            return redisTemplate.delete(key);
+        }
+
+        return Boolean.FALSE;
+    }
+
+    public Long deleteSafely(String key, String hashKey) {
+        if (RedisConnectionChecker.isConnected()) {
+            return redisTemplate.opsForHash().delete(key, hashKey);
+        }
+
+        return 0L;
+    }
+
+
     public Boolean hasKey(String key, String hashKey) {
         return redisTemplate.opsForHash().hasKey(key, hashKey);
     }
 
+    public Boolean hasKeySafely(String key, String hashKey) {
+        if (RedisConnectionChecker.isConnected()) {
+            return redisTemplate.opsForHash().hasKey(key, hashKey);
+        }
+
+        return Boolean.FALSE;
+    }
 }

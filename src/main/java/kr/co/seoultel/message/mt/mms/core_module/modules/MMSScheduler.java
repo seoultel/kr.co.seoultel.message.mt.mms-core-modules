@@ -1,9 +1,15 @@
 package kr.co.seoultel.message.mt.mms.core_module.modules;
 
+import kr.co.seoultel.message.core.dto.MessageDelivery;
+import kr.co.seoultel.message.mt.mms.core.entity.DeliveryState;
+import kr.co.seoultel.message.mt.mms.core.entity.DeliveryType;
 import kr.co.seoultel.message.mt.mms.core.entity.MessageHistory;
 import kr.co.seoultel.message.mt.mms.core.util.DateUtil;
+import kr.co.seoultel.message.mt.mms.core.util.FallbackUtil;
 import kr.co.seoultel.message.mt.mms.core_module.modules.image.ImageService;
+import kr.co.seoultel.message.mt.mms.core_module.modules.report.MrReport;
 import kr.co.seoultel.message.mt.mms.core_module.storage.HashMapStorage;
+import kr.co.seoultel.message.mt.mms.core_module.storage.QueueStorage;
 import kr.co.seoultel.message.mt.mms.core_module.utils.ImageUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +24,21 @@ import java.util.Map;
 @Slf4j
 public class MMSScheduler {
 
-    private final ExpirerService expirerService;
-    private final HashMapStorage<String, MessageHistory> historyStorage;
+    protected final ExpirerService expirerService;
 
-    public MMSScheduler(ExpirerService expirerService, HashMapStorage<String, MessageHistory> historyStorage) {
+    protected final QueueStorage<MrReport> reportQueueStorage;
+
+
+    protected final HashMapStorage<String, MessageHistory> historyStorage;
+    protected final HashMapStorage<String, MessageDelivery> deliveryStorage;
+
+
+
+    public MMSScheduler(ExpirerService expirerService, QueueStorage<MrReport> reportQueueStorage, HashMapStorage<String, MessageHistory> historyStorage, HashMapStorage<String, MessageDelivery> deliveryStorage) {
         this.expirerService = expirerService;
+        this.reportQueueStorage = reportQueueStorage;
         this.historyStorage = historyStorage;
+        this.deliveryStorage = deliveryStorage;
     }
 
     @Scheduled(cron = "0 00/30 * * * *")
@@ -57,18 +72,4 @@ public class MMSScheduler {
             }
         }
     }
-
-    /*
-     * TODO : 만료처리
-     */
-    @Scheduled(fixedDelay = 30000L)
-    public void processExpiredMessages() {
-        Collection<MessageHistory> snapshot = historyStorage.snapshot();
-        snapshot.stream().filter(MessageHistory::isExpire).forEach((messageHistory) -> {
-            String messageId = messageHistory.getMessageId();
-            historyStorage.remove(messageId);
-            log.info("[EXPIRED] Expired message[{}] successfully removed in historyMessage ", messageId);
-        });
-    }
-
 }

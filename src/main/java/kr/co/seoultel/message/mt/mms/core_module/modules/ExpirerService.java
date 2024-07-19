@@ -31,4 +31,7 @@ public class ExpirerService {
         if (!expiredImageIds.isEmpty()) throw new ImageNotFoundException(inboundMessage, expiredImageIds);
     }
 
+    public boolean isExpiredMessage(String messageId) {
+        return redisService.hasKey(RedisUtil.getRedisKeyOfMessage(), messageId);
+    }
 }
